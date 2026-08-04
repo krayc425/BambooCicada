@@ -22,9 +22,9 @@ struct ContentView: View {
             ZStack {
                 background.ignoresSafeArea()
                 decorativeRings(intensity: intensity)
+                    .offset(y: ringNavigationOffset)
 
                 VStack(spacing: 0) {
-                    header
                     Spacer(minLength: 8)
                     BambooCicadaScene(
                         anchor: physics.anchor,
@@ -72,6 +72,16 @@ struct ContentView: View {
             sound.silence()
         }
         .onReceive(ticker) { date in advanceFrame(at: date) }
+        #if os(iOS)
+        .navigationTitle("竹蝉")
+        .navigationBarTitleDisplayMode(.large)
+        #else
+        .toolbar {
+            ToolbarItem(placement: .principal) {
+                navigationHeader
+            }
+        }
+        #endif
     }
 
     private var background: some View {
@@ -85,18 +95,11 @@ struct ContentView: View {
         }
     }
 
-    private var header: some View {
-        VStack(spacing: 7) {
-            Text("竹蝉")
-                .font(.system(size: titleSize, weight: .black, design: .rounded))
-                .tracking(8)
-                .foregroundStyle(Color(red: 0.95, green: 0.82, blue: 0.45))
-            Text("一圈风，一声夏")
-                .font(.system(size: subtitleSize, weight: .medium, design: .rounded))
-                .tracking(3)
-                .foregroundStyle(.white.opacity(0.62))
-        }
-        .accessibilityElement(children: .combine)
+    private var navigationHeader: some View {
+        Text("竹蝉")
+            .font(.system(size: titleSize, weight: .black, design: .rounded))
+            .tracking(4)
+            .foregroundStyle(Color(red: 0.95, green: 0.82, blue: 0.45))
     }
 
     private var meter: some View {
@@ -105,7 +108,7 @@ struct ContentView: View {
                 .symbolEffect(.variableColor.iterative, isActive: intensity > 0.1)
             ForEach(0..<7, id: \.self) { index in
                 Capsule()
-                    .fill(index < Int(ceil(intensity * 7)) ? Color(red: 0.96, green: 0.72, blue: 0.25) : .white.opacity(0.14))
+                    .fill(index < illuminatedBarCount ? Color(red: 0.96, green: 0.72, blue: 0.25) : .white.opacity(0.14))
                     .frame(width: 7, height: CGFloat(10 + index * 3))
             }
             Text(intensity > 0.65 ? "蝉鸣正盛" : intensity > 0.08 ? "风起有声" : "等待起风")
@@ -116,6 +119,11 @@ struct ContentView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .background(.ultraThinMaterial, in: Capsule())
+    }
+
+    private var illuminatedBarCount: Int {
+        guard intensity > 0.08 else { return 0 }
+        return min(7, max(1, Int(ceil((intensity - 0.08) / 0.92 * 7))))
     }
 
     private var instructions: some View {
@@ -240,8 +248,8 @@ struct ContentView: View {
     private var intensity: Double { physics.soundActivity }
 
     #if os(tvOS)
-    private var titleSize: CGFloat { 72 }
-    private var subtitleSize: CGFloat { 26 }
+    private var titleSize: CGFloat { 36 }
+    private var ringNavigationOffset: CGFloat { -30 }
     private var meterSize: CGFloat { 23 }
     private var counterSize: CGFloat { 22 }
     private var instructionSize: CGFloat { 22 }
@@ -250,8 +258,8 @@ struct ContentView: View {
     private var instructionIcon: String { "circle.grid.cross" }
     private var instructionText: String { "在遥控器触控盘上画圈，或按方向键助力" }
     #else
-    private var titleSize: CGFloat { 48 }
-    private var subtitleSize: CGFloat { 17 }
+    private var titleSize: CGFloat { 20 }
+    private var ringNavigationOffset: CGFloat { -44 }
     private var meterSize: CGFloat { 15 }
     private var counterSize: CGFloat { 15 }
     private var instructionSize: CGFloat { 15 }
@@ -263,5 +271,7 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    NavigationStack {
+        ContentView()
+    }
 }
