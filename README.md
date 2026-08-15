@@ -74,17 +74,6 @@ BambooCicada 使用 SwiftUI 与 SceneKit 模拟竹蝉的旋转、绳索摆动和
 - 在遥控器触控盘上画圈来驱动竹蝉。
 - 使用方向键为旋转助力或改变方向。
 
-### 项目结构
-
-| 文件 | 说明 |
-| --- | --- |
-| `BambooCicadaApp.swift` | 应用入口与导航容器 |
-| `ContentView.swift` | 主界面、手势处理、帧更新与状态展示 |
-| `BambooCicadaScene.swift` | SceneKit 场景、3D 模型与动画 |
-| `ToyPhysics.swift` | 绳摆、重力、张力及旋转物理模拟 |
-| `CicadaSoundEngine.swift` | 基于 AVAudioEngine 的程序化声音合成 |
-| `RemoteInput.swift` | Apple TV 遥控器与游戏控制器输入 |
-
 ### 技术栈
 
 - SwiftUI
@@ -160,17 +149,6 @@ There are no third-party dependencies, so no additional package-installation ste
 
 - Draw circles on the remote touchpad to drive the cicada.
 - Use the directional buttons to nudge the rotation or change direction.
-
-### Project Structure
-
-| File | Responsibility |
-| --- | --- |
-| `BambooCicadaApp.swift` | App entry point and navigation container |
-| `ContentView.swift` | Main UI, gesture handling, frame updates, and status display |
-| `BambooCicadaScene.swift` | SceneKit scene, procedural 3D model, and animation |
-| `ToyPhysics.swift` | Pendulum, gravity, tension, and rotation simulation |
-| `CicadaSoundEngine.swift` | Procedural audio synthesis using AVAudioEngine |
-| `RemoteInput.swift` | Apple TV remote and game-controller input |
 
 ### Tech Stack
 
