@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct ZhuZhiLiaoApp: App {
+struct BambooCicadaApp: App {
     var body: some Scene {
         WindowGroup {
             NavigationStack {

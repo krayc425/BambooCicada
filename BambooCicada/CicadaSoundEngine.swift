@@ -70,7 +70,7 @@ final class CicadaSoundEngine {
         // second narrow resonator ringing like a radio carrier.
         let voiceBand = lowFormant.bands[0]
         voiceBand.filterType = .bandPass
-        voiceBand.frequency = 1_580
+        voiceBand.frequency = 1_645
         voiceBand.bandwidth = 1.05
         voiceBand.bypass = false
         lowFormant.globalGain = 9.5
