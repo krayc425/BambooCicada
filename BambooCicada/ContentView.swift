@@ -13,6 +13,7 @@ struct ContentView: View {
     @State private var physicsAccumulator = 0.0
     @State private var partialRotation = 0.0
     @State private var lastFrameTime: Date?
+    @State private var isShowingAbout = false
     @GestureState private var isLongPressing = false
 
     private let ticker = Timer.publish(every: 1.0 / 60.0, on: .main, in: .common).autoconnect()
@@ -55,6 +56,11 @@ struct ContentView: View {
                 .padding(.horizontal, horizontalPadding)
                 .padding(.vertical, verticalPadding)
             }
+            // GeometryReader proposes its size to the child, but a ZStack can
+            // still resolve to the ideal size of its contents. Pinning the root
+            // stack to the available area keeps the rings and controls centered
+            // on the screen instead of around the content's narrower bounds.
+            .frame(width: proxy.size.width, height: proxy.size.height, alignment: .center)
             .contentShape(Rectangle())
             #if os(tvOS)
             .focusable()
@@ -72,9 +78,17 @@ struct ContentView: View {
             sound.silence()
         }
         .onReceive(ticker) { date in advanceFrame(at: date) }
+        .sheet(isPresented: $isShowingAbout) {
+            AboutView()
+        }
         #if os(iOS)
         .navigationTitle("竹蝉")
         .navigationBarTitleDisplayMode(.large)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                aboutButton
+            }
+        }
         #else
         .toolbar {
             ToolbarItem(placement: .principal) {
@@ -82,6 +96,15 @@ struct ContentView: View {
             }
         }
         #endif
+    }
+
+    private var aboutButton: some View {
+        Button {
+            isShowingAbout = true
+        } label: {
+            Label("关于竹蝉", systemImage: "info.circle")
+        }
+        .accessibilityHint("打开竹蝉的介绍")
     }
 
     private var background: some View {
